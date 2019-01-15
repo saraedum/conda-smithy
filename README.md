@@ -1,3 +1,12 @@
+A Fork of conda-smithy to Keep conda-forge Build Files and a Package's Source Code in the Repository
+====================================================================================================
+
+This is a set of patches that are constantly rebased on top of the official conda-smithy. Some of
+these patches should probably be upstreamed.
+
+Original README
+===============
+
 Overview
 --------
 
