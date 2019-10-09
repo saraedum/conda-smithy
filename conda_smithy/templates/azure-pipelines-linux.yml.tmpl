@@ -3,8 +3,15 @@
 # -*- mode: yaml -*-
 
 jobs:
-- job: linux
-  {{ azure_yaml|indent(2) }}
+{%- for data in configs %}
+{%- if data.platform.startswith('linux') %}
+- job: {{ data.config_name }}
+  pool:
+    vmImage: ubuntu-16.04
+  variables:
+    CONFIG: {{ data.config_name }}
+    UPLOAD_PACKAGES: {{ data.upload }}
+    DOCKER_IMAGE: {{ data.config["docker_image"][-1] }}
   steps:
   # configure qemu binfmt-misc running.  This allows us to run docker containers
   # embedded qemu-static
@@ -29,4 +36,10 @@ jobs:
     env:
 {%- for secret in secrets %}
       {{ secret }}: $({{ secret }})
+{%- endfor %}
+{%- if data.upload %}
+  - publish: $(System.DefaultWorkingDirectory)/build_artifacts
+    artifact: {{ data.config_name }}
+{%- endif %}
+{%- endif %}
 {%- endfor %}

@@ -39,8 +39,8 @@ logger = logging.getLogger(__name__)
 
 def package_key(config, used_loop_vars, subdir):
     # get the build string from whatever conda-build makes of the configuration
-    build_vars = "".join(
-        [k + str(config[k][0]) for k in sorted(list(used_loop_vars))]
+    build_vars = "_".join(
+        [k + "_" + str(config[k][0]) for k in sorted(list(used_loop_vars))]
     )
     key = []
     # kind of a special case.  Target platform determines a lot of output behavior, but may not be
@@ -52,8 +52,9 @@ def package_key(config, used_loop_vars, subdir):
         build_vars += "target-" + tp
     if build_vars:
         key.append(build_vars)
-    key = "-".join(key)
-    return key.replace("*", "_").replace(" ", "_")
+    key = "_".join(key)
+    import re
+    return re.sub('[^a-zA-Z0-9_]', '', key)
 
 
 def copytree(src, dst, ignore=(), root_dst=None):
