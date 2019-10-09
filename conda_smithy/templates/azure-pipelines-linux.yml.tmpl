@@ -20,7 +20,8 @@ jobs:
       ls /proc/sys/fs/binfmt_misc/
     condition: not(startsWith(variables['CONFIG'], 'linux_64'))
     displayName: Configure binfmt_misc
-
+  - download: current
+    patterns: '**/*.tar.bz2'
   - script: |
         export CI=azure
         export GIT_BRANCH=$BUILD_SOURCEBRANCHNAME

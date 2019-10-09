@@ -19,11 +19,15 @@ conda-build:
 
 CONDARC
 
+# Make sure build_artifacts is a valid channel
+conda index --no-progress ${FEEDSTOCK_ROOT}/build_artifacts
+
 conda install --yes --quiet conda-forge-ci-setup=3 conda-build pip -c conda-forge
 {% if local_ci_setup %}
 conda uninstall --quiet --yes --force conda-forge-ci-setup
 pip install --no-deps ${RECIPE_ROOT}/.
 {%- endif %}
+
 # set up the condarc
 setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
@@ -36,6 +40,7 @@ setup_conda_rc "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 make_build_number "${FEEDSTOCK_ROOT}" "${RECIPE_ROOT}" "${CONFIG_FILE}"
 
 conda build "${RECIPE_ROOT}" -m "${CI_SUPPORT}/${CONFIG}.yaml" \
+    --use-local \
     --suppress-variables \
     --clobber-file "${CI_SUPPORT}/clobber_${CONFIG}.yaml"
 
