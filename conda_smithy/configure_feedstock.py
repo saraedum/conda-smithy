@@ -421,6 +421,10 @@ def dump_subspace_config_files(
             os.makedirs(out_folder)
 
         config = finalize_config(config, platform, forge_config)
+        # something like this could probably go upstream
+        upload_build = upload and forge_config.get("skip_upload",{}).get(config_name, True)
+        # my private hack
+        upload_build = upload_build and "target_release" in config_name
 
         short_config_name = config_name
         if len(short_config_name) >= 49:
@@ -435,7 +439,7 @@ def dump_subspace_config_files(
             {
                 "config_name": config_name,
                 "platform": target_platform,
-                "upload": upload,
+                "upload": upload_build,
                 "config": config,
                 "short_config_name": short_config_name,
             }
